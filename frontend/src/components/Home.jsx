@@ -199,6 +199,7 @@ function Home() {
     const [isEmailSent, setIsEmailSent] = useState(false);
     const [isVerified, setIsVerified] = useState(localStorage.getItem('verified') ? localStorage.getItem('verified') : false);
     const [timer, setTimer] = useState(900); // 900 seconds = 15 minutes
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if(isVerified) return;
@@ -212,6 +213,7 @@ function Home() {
     }, [timer]);
 
     const sendVerificationEmail = async () => {
+        setLoading(true)
         try {
             // Send request to backend to send verification email
             await axios.get(`${import.meta.env.VITE_SERVER}/api/user/sendMail`, {
@@ -222,6 +224,8 @@ function Home() {
             setIsEmailSent(true);
         } catch (error) {
             console.error('Error sending verification email:', error.message);
+        }finally{
+            setLoading(false)
         }
     };
 
@@ -261,6 +265,7 @@ function Home() {
         <div className="flex flex-col p-4 pt-8 min-h-screen w-[90%] mx-auto">
             <div className='flex justify-center'>
                 {
+                    loading ? <Spinner className='mb-4' /> :
                     !localStorage.getItem('verified') ? (
                         <>
                             {isEmailSent ? (

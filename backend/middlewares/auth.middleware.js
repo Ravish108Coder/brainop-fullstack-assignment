@@ -25,14 +25,18 @@ export const isAuthenticated = async (req, res, next) => {
 };
 
 export const uploadController = async (req, res, next) => {
+    if (!req.file) {
+        return next(); // If no file is uploaded, continue to the next middleware
+    }
+
     try {
         if (!req.file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-            res.send({ msg: 'Only image files (jpg, jpeg, png) are allowed!' })
-        };
+            return res.status(400).send({ msg: 'Only image files (jpg, jpeg, png) are allowed!' });
+        }
+
         const result = await cloudinary.uploader.upload(req.file.path);
-        // console.log(result)
-        req.body.avatar = result.secure_url
-        next()
+        req.body.avatar = result.secure_url;
+        next();
     } catch (err) {
         console.error(err);
         return res.status(500).json({
@@ -40,4 +44,4 @@ export const uploadController = async (req, res, next) => {
             message: "Error in uploading image"
         });
     }
-}
+};

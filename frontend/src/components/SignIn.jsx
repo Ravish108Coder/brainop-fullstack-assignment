@@ -58,7 +58,7 @@ function SignInForm() {
             // Do something with the response, e.g., redirect the user
 
             localStorage.setItem('username', JSON.stringify(response.data.user.username))
-            localStorage.setItem('avatar', JSON.stringify(response.data.user.avatar))
+           {response.data.user.avatar !== "null" && localStorage.setItem('avatar', JSON.stringify(response.data.user.avatar))}
             localStorage.setItem('token', JSON.stringify(response.data.token))
             response.data.user.isVerified && localStorage.setItem('verified', response.data.user.isVerified)
     
