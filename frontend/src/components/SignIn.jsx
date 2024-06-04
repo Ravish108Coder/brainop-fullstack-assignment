@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { z } from 'zod';
 
@@ -60,14 +61,14 @@ function SignInForm() {
             localStorage.setItem('username', JSON.stringify(response.data.user.username))
            {response.data.user.avatar !== "null" && localStorage.setItem('avatar', JSON.stringify(response.data.user.avatar))}
             localStorage.setItem('token', JSON.stringify(response.data.token))
-            response.data.user.isVerified && localStorage.setItem('verified', response.data.user.isVerified)
+            localStorage.setItem('verified', response.data.user.isVerified)
     
             setUserDetails({
                 identifier: "",
                 password: ""
             });
-
             navigate('/')
+            response.data.user.isVerified === false ? toast.success(`Welcome ${response.data.user.username} \nPlease verify your email ${response.data.user.email} to continue`) : toast.success(`Welcome ${response.data.user.username}`);
         } catch (error) {
             // Handle error response
             console.error('Error:', error.response ? error.response.data : error.message);

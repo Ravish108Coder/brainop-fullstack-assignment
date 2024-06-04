@@ -196,13 +196,20 @@ function Home() {
     }
 
     const PostListDialogRef = useRef(null)
+    const preferredTimer = 20
     const [isEmailSent, setIsEmailSent] = useState(false);
-    const [isVerified, setIsVerified] = useState(localStorage.getItem('verified') ? localStorage.getItem('verified') : false);
-    const [timer, setTimer] = useState(900); // 900 seconds = 15 minutes
+    const [isVerified, setIsVerified] = useState(localStorage.getItem('verified') === "true");
+    const [timer, setTimer] = useState(preferredTimer); // 900 seconds = 15 minutes
     const [loading, setLoading] = useState(false)
 
+    // console.log(isVerified)
+
     useEffect(() => {
-        if(isVerified) return;
+        // if(isVerified) return;
+        if(timer == 0){
+            setIsEmailSent(false)
+            setTimer(preferredTimer)
+        }
         const interval = setInterval(() => {
             if (timer > 0) {
                 setTimer(timer - 1);
@@ -250,7 +257,7 @@ function Home() {
 
     const handleResendVerification = () => {
         // Reset timer
-        setTimer(900);
+        setTimer(preferredTimer);
         // Resend verification email
         sendVerificationEmail();
     };
@@ -260,20 +267,28 @@ function Home() {
             checkVerificationStatus()
         }
     }, [isEmailSent, timer, isVerified]);
+
+    const customStyle = {
+        background: '-webkit-linear-gradient(91.98deg, #b73bbe 1.46%, #ebcb2e 57.17%)',
+        WebkitBackgroundClip: 'text',
+        backgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        color: 'transparent',
+      };
     
     return (
         <div className="flex flex-col p-4 pt-8 min-h-screen w-[90%] mx-auto">
             <div className='flex justify-center'>
                 {
                     loading ? <Spinner className='mb-4' /> :
-                    !localStorage.getItem('verified') ? (
+                    (isVerified===false)? (
                         <>
                             {isEmailSent ? (
-                                <div>
+                                <div className='text-green-900'>
                                     <p>Verification email sent. Checking status...</p>
                                     <p>Time remaining: {Math.floor(timer / 60)}:{timer % 60 < 10 ? `0${timer % 60}` : timer % 60}</p></div>
                             ) : (
-                                <p onClick={handleResendVerification} className='hover:text-blue-600 hover:underline cursor-pointer'>Account not verified. Click here to resend verification email</p>
+                                <p onClick={handleResendVerification} className='text-red-500 animate-bounce hover:text-blue-600 hover:underline cursor-pointer'>Account not verified. Click here to resend verification email</p>
                             )}
                         </>
                     ) : (
@@ -282,7 +297,7 @@ function Home() {
                 }
             </div>
             <div className='flex p-4 justify-between items-center h-[100px] border-2 bg-white rounded-xl mb-12 px-12'>
-                <h1 className='font-bold text-xl text-pretty'>Welcome to Blog Post</h1>
+                <h1 className='font-bold text-xl text-pretty'>Welcome <span className='uppercase' style={customStyle}>{JSON.parse(localStorage.getItem('username'))}</span> to Blog Post</h1>
                 {/* <Avatar src={localStorage.getItem('avatar') ? String(JSON.parse(localStorage.getItem('avatar'))) : "https://docs.material-tailwind.com/img/face-2.jpg"} alt="avatar" /> */}
                 <ProfileCardMenu handleLogout={handleLogout} placement={"bottom"} />
             </div>

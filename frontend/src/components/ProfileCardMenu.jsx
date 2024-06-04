@@ -35,8 +35,8 @@ import {
             src={localStorage.getItem('avatar') ? String(JSON.parse(localStorage.getItem('avatar'))) : "https://docs.material-tailwind.com/img/face-2.jpg"}
           />
         </MenuHandler>
-        <MenuList>
-          <div className=" flex justify-center bg-white outline-none">
+        <MenuList className="min-w-0">
+          <div className=" flex justify-center bg-white outline-none scale-75">
             <LogOutBtn handleLogout={handleLogout} />
           </div>
         </MenuList>
