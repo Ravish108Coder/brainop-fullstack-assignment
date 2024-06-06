@@ -26,7 +26,7 @@ router.get('/sendMail', async (req, res) => {
 
         const message = `Hello, ${email}!\n\n
         Welcome to Blog Post app. To verify your email address and complete your registration, please click the link below:\n
-        http://localhost:8080/api/auth/verify-email?token=${token}\n
+        https://brainop-fullstack-assignment.onrender.com/api/auth/verify-email?token=${token}\n
         Please note that this link will expire in 15 minutes. If you did not request this email, please ignore it.\n\n
         Thank you,\n
         The Blog Post Team`;
