@@ -129,13 +129,4 @@ router.get('/verify-email', async (req, res) => {
 
 });
 
-router.get('/allUsers', async (req, res) => {
-    try {
-        const users = await User.find();
-        res.json({ data: users, msg: 'All Users Fetched Successfully' })
-    } catch (error) {
-
-    }
-})
-
 export default router;

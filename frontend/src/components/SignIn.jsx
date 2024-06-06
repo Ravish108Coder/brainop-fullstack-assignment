@@ -63,28 +63,29 @@ function SignInForm() {
             localStorage.setItem('token', JSON.stringify(response.data.token))
             localStorage.setItem('verified', response.data.user.isVerified)
     
-            setUserDetails({
-                identifier: "",
-                password: ""
-            });
+            // setUserDetails({
+            //     identifier: "",
+            //     password: ""
+            // });
             navigate('/')
             response.data.user.isVerified === false ? toast.success(`Welcome ${response.data.user.username} \nPlease verify your email ${response.data.user.email} to continue`) : toast.success(`Welcome ${response.data.user.username}`);
         } catch (error) {
             // Handle error response
             console.error('Error:', error.response ? error.response.data : error.message);
+            toast.error('Failed to Login \nTry again', {
+                position: 'bottom-left',
+                autoClose: 5000,
+                theme: "dark",
+            })
             // Optionally set an error state to show feedback to the user
         } finally {
             setLoading(false);
         }
 
-        // Simulate API call
-        setTimeout(() => {
-            setLoading(false);
-            setUserDetails({
-                identifier: "",
-                password: ""
-            });
-        }, 3000);
+        setUserDetails({
+            identifier: "",
+            password: ""
+        });
     }
 
     return (

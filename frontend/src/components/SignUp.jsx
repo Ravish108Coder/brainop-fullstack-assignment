@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { z } from 'zod';
 
 // Define the Zod schema for form validation
@@ -39,6 +40,7 @@ function SignUpForm() {
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrors({});
         const result = signUpSchema.safeParse(userDetails);
     
         if (!result.success) {
@@ -52,8 +54,9 @@ function SignUpForm() {
         let fieldErrors = {};
         if(checkboxChecked === false){
             fieldErrors.checkbox =  "You must agree to the terms and conditions";
+            setErrors(fieldErrors);
+            return;
         }
-        setErrors(fieldErrors);
         // console.log(userDetails.password, userDetails.confirm_password)
         if(userDetails.password !== userDetails.confirm_password){
             // console.log('hihdhdh')
@@ -102,15 +105,30 @@ function SignUpForm() {
                 profile_pic_file: null
             });
             setCheckboxChecked(false);
-            setErrors({});
+            
     
             navigate('/signin');
         } catch (error) {
             // Handle errors
-            console.error('Error:', error.message);
+            console.log('Error:', error.message);
+            toast.error('Failed to Register \nTry again', {
+                position: 'bottom-left',
+                autoClose: 5000,
+                theme: "dark",
+            })
         } finally {
             setLoading(false);
         }
+
+        setUserDetails({
+            username: "",
+            email: "",
+            password: "",
+            confirm_password: "",
+            name: "",
+            profile_pic_file: null
+        });
+        setCheckboxChecked(false)
     };
     
     const handleFileChange = (event) => {
